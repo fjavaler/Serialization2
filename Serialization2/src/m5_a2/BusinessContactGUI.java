@@ -35,9 +35,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 /**
- * This class creates a BusinessContact graphical user interface.
- * A BusinessContactGUI contains a JFrame, JTextFields, a JComboBox,
- * JButtons, an ArrayList, a File, a String and a boolean.
+ * This class creates a BusinessContact graphical user interface. A
+ * BusinessContactGUI contains a JFrame, JTextFields, a JComboBox, JButtons, an
+ * ArrayList, a File, a String and a boolean.
  * 
  * @author Frederick Javalera
  */
@@ -294,6 +294,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// TODO: serialize needed here.
 				// create new contact
 				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
@@ -380,7 +381,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//TODO: update list upon open.
+				// TODO: update list upon open.
 				contactList = deserialize();
 				updateContactList();
 			}
@@ -444,17 +445,15 @@ public class BusinessContactGUI
 	}
 
 	/****************************************************
-	 * Method     : BusinessContact (constructor)
+	 * Method : BusinessContact (constructor)
 	 *
-	 * Purpose    : The Sort method sorts an array of
-	 *              integers using a standard bubble sort.
-	 *              The array is sorted in place.
+	 * Purpose : The Sort method sorts an array of integers using a standard
+	 * bubble sort. The array is sorted in place.
 	 *
-	 * Parameters : array              - an array of integers
-	 *              number_of_elements - the number of elements
-	 *                                   in the array
+	 * Parameters : array - an array of integers number_of_elements - the number
+	 * of elements in the array
 	 *
-	 * Returns    : This method does not return a value.
+	 * Returns : This method does not return a value.
 	 *
 	 ****************************************************/
 	private void reset()
@@ -520,17 +519,15 @@ public class BusinessContactGUI
 	}
 
 	/****************************************************
-	 * Method     : BusinessContact (constructor)
+	 * Method : BusinessContact (constructor)
 	 *
-	 * Purpose    : The Sort method sorts an array of
-	 *              integers using a standard bubble sort.
-	 *              The array is sorted in place.
+	 * Purpose : The Sort method sorts an array of integers using a standard
+	 * bubble sort. The array is sorted in place.
 	 *
-	 * Parameters : array              - an array of integers
-	 *              number_of_elements - the number of elements
-	 *                                   in the array
+	 * Parameters : array - an array of integers number_of_elements - the number
+	 * of elements in the array
 	 *
-	 * Returns    : This method does not return a value.
+	 * Returns : This method does not return a value.
 	 *
 	 ****************************************************/
 	public void selectFile()
@@ -547,14 +544,14 @@ public class BusinessContactGUI
 	}
 
 	/****************************************************
-	 * Method     : updateContactList
+	 * Method : updateContactList
 	 *
-	 * Purpose    : The UpdateContactList method updates the
-	 * JcomboBoxList of contacts to reflect its current status.
+	 * Purpose : The UpdateContactList method updates the JcomboBoxList of
+	 * contacts to reflect its current status.
 	 *
 	 * Parameters : None.
 	 *
-	 * Returns    : This method does not return a value.
+	 * Returns : This method does not return a value.
 	 *
 	 ****************************************************/
 	private void updateContactList()
@@ -566,13 +563,13 @@ public class BusinessContactGUI
 			Character c = Character.toUpperCase(first.charAt(0));
 			String upperCaseFirstName = c + first.substring(1, first.length());
 			contact.setFirstName(upperCaseFirstName);
-			
+
 			StringBuilder last = new StringBuilder();
 			last.append(contact.getLastName());
 			Character c2 = Character.toUpperCase(last.charAt(0));
 			String upperCaseLastName = c2 + last.substring(1, last.length());
 			contact.setLastName(upperCaseLastName);
-			
+
 			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 		}
 	}
