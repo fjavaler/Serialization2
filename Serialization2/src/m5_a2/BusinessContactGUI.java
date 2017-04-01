@@ -395,7 +395,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Implement
+				// TODO: Implement "Save"
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/save.png")));
@@ -406,7 +406,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Implement
+				// TODO: Implement "Save as"
 			}
 		});
 		mntmSaveAs.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/saveAs.png")));
@@ -435,7 +435,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Implement about pop-up window
+				// TODO: Implement "about" pop-up window
 			}
 		});
 		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/about.png")));
