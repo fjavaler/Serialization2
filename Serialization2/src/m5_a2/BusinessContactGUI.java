@@ -35,6 +35,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 /**
+ * This class creates a BusinessContact graphical user interface.
+ * A BusinessContactGUI contains a JFrame, JTextFields, a JComboBox,
+ * JButtons, an ArrayList, a File, a String and a boolean.
  * 
  * @author Frederick Javalera
  */
@@ -480,7 +483,6 @@ public class BusinessContactGUI
 		try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getAbsolutePath())))
 		{
 			outStream.writeObject(contactList);
-//			updateContactList();
 		}
 		catch (IOException e)
 		{
@@ -544,15 +546,12 @@ public class BusinessContactGUI
 	}
 
 	/****************************************************
-	 * Method     : BusinessContact (constructor)
+	 * Method     : updateContactList
 	 *
-	 * Purpose    : The Sort method sorts an array of
-	 *              integers using a standard bubble sort.
-	 *              The array is sorted in place.
+	 * Purpose    : The UpdateContactList method updates the
+	 * JcomboBoxList of contacts to reflect its current status.
 	 *
-	 * Parameters : array              - an array of integers
-	 *              number_of_elements - the number of elements
-	 *                                   in the array
+	 * Parameters : None.
 	 *
 	 * Returns    : This method does not return a value.
 	 *
