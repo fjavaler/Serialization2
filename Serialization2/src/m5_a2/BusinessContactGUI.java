@@ -294,8 +294,6 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// update contact list and serialize
-				updateComboBoxContacts();
 				// create new contact
 				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
@@ -303,9 +301,9 @@ public class BusinessContactGUI
 				contactList.add(newContact);
 				// disable the button
 				btnAdd.setEnabled(false);
-				
+				// update contact list and serialize
+				updateComboBoxContacts();
 				serialize();
-
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -564,22 +562,19 @@ public class BusinessContactGUI
 	{
 		for (BusinessContact contact : contactList)
 		{
-			if (!contactList.contains(contact))
-			{
-				StringBuilder first = new StringBuilder();
-				first.append(contact.getFirstName());
-				Character c = Character.toUpperCase(first.charAt(0));
-				String upperCaseFirstName = c + first.substring(1, first.length());
-				contact.setFirstName(upperCaseFirstName);
+			StringBuilder first = new StringBuilder();
+			first.append(contact.getFirstName());
+			Character c = Character.toUpperCase(first.charAt(0));
+			String upperCaseFirstName = c + first.substring(1, first.length());
+			contact.setFirstName(upperCaseFirstName);
 
-				StringBuilder last = new StringBuilder();
-				last.append(contact.getLastName());
-				Character c2 = Character.toUpperCase(last.charAt(0));
-				String upperCaseLastName = c2 + last.substring(1, last.length());
-				contact.setLastName(upperCaseLastName);
-				
-				comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
-			}
+			StringBuilder last = new StringBuilder();
+			last.append(contact.getLastName());
+			Character c2 = Character.toUpperCase(last.charAt(0));
+			String upperCaseLastName = c2 + last.substring(1, last.length());
+			contact.setLastName(upperCaseLastName);
+
+			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 		}
 	}
 }
