@@ -435,6 +435,20 @@ public class BusinessContactGUI
 		helpMenu.add(mntmAbout);
 	}
 
+	/****************************************************
+	 * Method     : BusinessContact (constructor)
+	 *
+	 * Purpose    : The Sort method sorts an array of
+	 *              integers using a standard bubble sort.
+	 *              The array is sorted in place.
+	 *
+	 * Parameters : array              - an array of integers
+	 *              number_of_elements - the number of elements
+	 *                                   in the array
+	 *
+	 * Returns    : This method does not return a value.
+	 *
+	 ****************************************************/
 	private void reset()
 	{
 		textFieldCompany.setText("");
@@ -498,6 +512,20 @@ public class BusinessContactGUI
 		return list;
 	}
 
+	/****************************************************
+	 * Method     : BusinessContact (constructor)
+	 *
+	 * Purpose    : The Sort method sorts an array of
+	 *              integers using a standard bubble sort.
+	 *              The array is sorted in place.
+	 *
+	 * Parameters : array              - an array of integers
+	 *              number_of_elements - the number of elements
+	 *                                   in the array
+	 *
+	 * Returns    : This method does not return a value.
+	 *
+	 ****************************************************/
 	public void selectFile()
 	{
 		JFileChooser fileChooser = new JFileChooser();
@@ -511,6 +539,20 @@ public class BusinessContactGUI
 		}
 	}
 
+	/****************************************************
+	 * Method     : BusinessContact (constructor)
+	 *
+	 * Purpose    : The Sort method sorts an array of
+	 *              integers using a standard bubble sort.
+	 *              The array is sorted in place.
+	 *
+	 * Parameters : array              - an array of integers
+	 *              number_of_elements - the number of elements
+	 *                                   in the array
+	 *
+	 * Returns    : This method does not return a value.
+	 *
+	 ****************************************************/
 	private void updateContactList()
 	{
 		for (BusinessContact contact : contactList)
