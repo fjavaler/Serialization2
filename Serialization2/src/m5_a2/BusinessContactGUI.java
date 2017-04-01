@@ -385,9 +385,10 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: update list upon open.
+				//TODO: actively implementing
 				contactList = deserialize();
 				updateContactList();
+				fileSaved = true;
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
