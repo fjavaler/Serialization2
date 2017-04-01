@@ -380,8 +380,9 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				serialize();
-				reset();
+				//TODO: update list upon open.
+				contactList = deserialize();
+				updateContactList();
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
