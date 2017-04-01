@@ -294,7 +294,8 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: serialize needed here.
+				// update contact list and serialize
+				updateComboBoxContacts();
 				// create new contact
 				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
@@ -302,8 +303,7 @@ public class BusinessContactGUI
 				contactList.add(newContact);
 				// disable the button
 				btnAdd.setEnabled(false);
-				// update contact list and serialize
-				updateContactList();
+				
 				serialize();
 
 			}
@@ -388,7 +388,7 @@ public class BusinessContactGUI
 				// TODO: actively implementing
 				contactList = deserialize();
 				// the line below creates duplicate contact entries
-				updateContactList();
+				updateComboBoxContacts();
 				fileSaved = false;
 			}
 		});
@@ -560,7 +560,7 @@ public class BusinessContactGUI
 	 * Returns : This method does not return a value.
 	 *
 	 ****************************************************/
-	private void updateContactList()
+	private void updateComboBoxContacts()
 	{
 		for (BusinessContact contact : contactList)
 		{
@@ -577,7 +577,7 @@ public class BusinessContactGUI
 				Character c2 = Character.toUpperCase(last.charAt(0));
 				String upperCaseLastName = c2 + last.substring(1, last.length());
 				contact.setLastName(upperCaseLastName);
-
+				
 				comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 			}
 		}
