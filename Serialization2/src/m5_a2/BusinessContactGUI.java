@@ -302,9 +302,10 @@ public class BusinessContactGUI
 				contactList.add(newContact);
 				//disable the button
 				btnAdd.setEnabled(false);
-				//serialize and update list
-				serialize();
+				//update contact list and serialize
 				updateContactList();
+				serialize();
+				
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
