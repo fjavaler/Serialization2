@@ -300,7 +300,10 @@ public class BusinessContactGUI
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
 				// add new contact to contact list
 				contactList.add(newContact);
+				//disable the button
 				btnAdd.setEnabled(false);
+				//serialize and update list
+				serialize();
 				updateContactList();
 			}
 		});
