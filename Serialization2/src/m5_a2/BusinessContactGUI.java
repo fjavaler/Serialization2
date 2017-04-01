@@ -297,16 +297,14 @@ public class BusinessContactGUI
 			public void actionPerformed(ActionEvent e)
 			{
 				// create new contact
-				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), 
-						textFieldLast.getText(), textFieldPhone.getText(), 
-						textFieldEmail.getText(), textFieldCompany.getText());
+				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
+						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
 				// add new contact to contact list
 				contactList.add(newContact);
 				// disable the button
 				btnAdd.setEnabled(false);
 				// update contact list and serialize
-				updateComboBoxContacts(); 
-				serialize();
+				updateComboBoxContacts();
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -386,17 +384,11 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (e.getActionCommand() == "Open")
-				{
-					System.out.println(e.getSource());
-					// if(e.getSource())
-					// TODO: actively implementing
-					contactList = deserialize();
-					// the line below creates duplicate contact entries
-					updateComboBoxContacts();
-					fileSaved = false;
-					fileOpened = true;
-				}
+				file = retrieveFileToOpen();
+				openFile();
+				updateComboBoxContacts();
+				fileSaved = false;
+				fileOpened = true;
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
@@ -410,7 +402,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(fileSaved = false)
+				if (fileSaved = false)
 				{
 					file = retrieveFileToSave();
 					saveFile();
@@ -419,7 +411,6 @@ public class BusinessContactGUI
 				{
 					saveFile();
 				}
-//				
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/save.png")));
@@ -572,7 +563,7 @@ public class BusinessContactGUI
 		}
 		return file = null;
 	}
-	
+
 	/****************************************************
 	 * Method : BusinessContact (constructor)
 	 *
@@ -617,6 +608,25 @@ public class BusinessContactGUI
 		serialize();
 	}
 	
+	/****************************************************
+	 * Method : BusinessContact (constructor)
+	 *
+	 * Purpose : The Sort method sorts an array of integers using a standard
+	 * bubble sort. The array is sorted in place.
+	 *
+	 * Parameters : array - an array of integers number_of_elements - the number
+	 * of elements in the array
+	 *
+	 * Returns : This method does not return a value.
+	 *
+	 ****************************************************/
+	public void openFile()
+	{
+		//Retrieves list from save file
+		contactList = deserialize();
+		updateComboBoxContacts();
+	}
+
 	/****************************************************
 	 * Method : updateContactList
 	 *
