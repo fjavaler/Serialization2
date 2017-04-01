@@ -300,12 +300,12 @@ public class BusinessContactGUI
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
 				// add new contact to contact list
 				contactList.add(newContact);
-				//disable the button
+				// disable the button
 				btnAdd.setEnabled(false);
-				//update contact list and serialize
+				// update contact list and serialize
 				updateContactList();
 				serialize();
-				
+
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -385,10 +385,11 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//TODO: actively implementing
+				// TODO: actively implementing
 				contactList = deserialize();
+				// the line below creates duplicate contact entries
 				updateContactList();
-				fileSaved = true;
+				fileSaved = false;
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
@@ -563,19 +564,22 @@ public class BusinessContactGUI
 	{
 		for (BusinessContact contact : contactList)
 		{
-			StringBuilder first = new StringBuilder();
-			first.append(contact.getFirstName());
-			Character c = Character.toUpperCase(first.charAt(0));
-			String upperCaseFirstName = c + first.substring(1, first.length());
-			contact.setFirstName(upperCaseFirstName);
+			if (!contactList.contains(contact))
+			{
+				StringBuilder first = new StringBuilder();
+				first.append(contact.getFirstName());
+				Character c = Character.toUpperCase(first.charAt(0));
+				String upperCaseFirstName = c + first.substring(1, first.length());
+				contact.setFirstName(upperCaseFirstName);
 
-			StringBuilder last = new StringBuilder();
-			last.append(contact.getLastName());
-			Character c2 = Character.toUpperCase(last.charAt(0));
-			String upperCaseLastName = c2 + last.substring(1, last.length());
-			contact.setLastName(upperCaseLastName);
+				StringBuilder last = new StringBuilder();
+				last.append(contact.getLastName());
+				Character c2 = Character.toUpperCase(last.charAt(0));
+				String upperCaseLastName = c2 + last.substring(1, last.length());
+				contact.setLastName(upperCaseLastName);
 
-			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+				comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+			}
 		}
 	}
 }
