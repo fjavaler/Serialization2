@@ -401,6 +401,9 @@ public class BusinessContactGUI2
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement "save" menu item pressed
+				// select file with save option
+				// writeFile()
+				// update file status
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/save.png")));
