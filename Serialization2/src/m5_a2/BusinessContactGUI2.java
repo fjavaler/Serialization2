@@ -385,7 +385,6 @@ public class BusinessContactGUI2
 				// readFile()
 				// updateComboBox()
 				// update file status
-				// 
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/open.png")));
