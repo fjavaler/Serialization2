@@ -47,7 +47,7 @@ public class View
 	private JButton btnAdd;
 	private JButton btnDelete;
 	private JButton btnUpdate;
-	private File file;
+
 
 	/**
 	 * Launch the application.
