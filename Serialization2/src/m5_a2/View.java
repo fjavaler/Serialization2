@@ -62,7 +62,7 @@ public class View
 			{
 				try
 				{
-					BusinessContactGUI2 window = new BusinessContactGUI2();
+					View window = new View();
 					window.frmBusinessContactManagement.setVisible(true);
 				}
 				catch (Exception e)
@@ -76,7 +76,7 @@ public class View
 	/**
 		 * Create the application.
 		 */
-		public BusinessContactGUI2()
+		public View()
 		{
 			initialize();
 		}
@@ -110,9 +110,6 @@ public class View
 		lblContacts.setFont(new Font("Droid Sans", Font.BOLD, 17));
 		lblContacts.setBounds(3, 2, 72, 15);
 		panelContacts.add(lblContacts);
-
-		// initialize contact array list
-		contactList = new ArrayList<BusinessContact>();
 
 		// first name
 		JPanel panelFirstName = new JPanel();
@@ -163,7 +160,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement comboBox selection
+				// TODO: send event to Controller
 			}
 		});
 		comboBoxContacts.setFont(new Font("Droid Sans", Font.PLAIN, 13));
@@ -245,15 +242,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// clear text fields
-				textFieldFirst.setText("");
-				textFieldLast.setText("");
-				textFieldPhone.setText("");
-				textFieldEmail.setText("");
-				textFieldCompany.setText("");
-				// set add button to true
-				btnAdd.setEnabled(true);
-				// update file status
+				
 			}
 		});
 		ImageIcon newIcon = new ImageIcon("src/blueSquareButtonNew.png");
@@ -292,28 +281,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// construct new contact
-				BusinessContact contact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
-						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
-				// add contact to ArrayList
-				contactList.add(contact);
-				if (file != null)
-				{
-					serialize();
-				}
-				else
-				{
-					// do not serialize here. Serialize later or it will fail
-					// because no file has been chosen yet.
-					// update contactList comboBox
-					updateComboBox();
-				}
-
-				// update file status
-				// fileStatus("saved");
-
-				// deactivate add button
-				btnAdd.setEnabled(false);
+				
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -401,9 +369,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				selectFileAndOpen();
-				updateComboBoxOnOpen();
-				fileStatus("saved");
+				
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/open.png")));
@@ -419,10 +385,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "save" menu item pressed
-				saveFile();
-				// writeFile()
-				// update file status
+				
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/save.png")));
