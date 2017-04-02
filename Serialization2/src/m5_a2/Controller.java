@@ -13,6 +13,9 @@ import javax.swing.JOptionPane;
 
 public class Controller
 {
+	private View view = new View();
+	private Model model = new Model();
+	
 	protected void fileStatus(String status)
 	{
 		switch (status)

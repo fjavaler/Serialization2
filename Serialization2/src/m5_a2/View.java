@@ -48,7 +48,6 @@ public class View
 	private JButton btnDelete;
 	private JButton btnUpdate;
 
-
 	/**
 	 * Launch the application.
 	 */
