@@ -469,7 +469,6 @@ public class BusinessContactGUI2
 				//TODO: implement
 			}
 		}
-		
 	}
 
 	protected void updateComboBox()
@@ -527,6 +526,7 @@ public class BusinessContactGUI2
 		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getName())))
 		{
 			BCList = (ArrayList<BusinessContact>) inStream.readObject();
+			System.out.println(BCList.toString());
 		}
 		catch (IOException e)
 		{
