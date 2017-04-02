@@ -19,8 +19,11 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
@@ -245,14 +248,20 @@ public class BusinessContactGUI2
 		textFieldCompany.setBounds(218, 230, 361, 28);
 		frmBusinessContactManagement.getContentPane().add(textFieldCompany);
 
-		// new button
+		// "new" button
 		btnNew = new JButton("");
 		btnNew.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement new button pressed
-				
+				// clear text fields
+				textFieldFirst.setText("");
+				textFieldLast.setText("");
+				textFieldPhone.setText("");
+				textFieldEmail.setText("");
+				textFieldCompany.setText("");
+				// set add button to true
+				btnAdd.setEnabled(true);
 				// update file status
 			}
 		});
@@ -274,7 +283,7 @@ public class BusinessContactGUI2
 		btnNew.setBounds(47, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnNew);
 
-		// add button
+		// "add" button
 		btnAdd = new JButton("");
 		ImageIcon addIcon = new ImageIcon("src/blueSquareButtonAdd.png");
 		try
@@ -292,9 +301,28 @@ public class BusinessContactGUI2
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement add button pressed
-				
+				// construct new contact
+				BusinessContact contact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
+						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
+				// add contact to ArrayList
+				contactList.add(contact);
+				if (file != null)
+				{
+					serialize();
+				}
+				else
+				{
+					// do not serialize here. Serialize later or it will fail
+					// because no file has been chosen yet.
+					// update contactList comboBox
+					updateComboBox();
+				}
+
 				// update file status
+				// fileStatus("saved");
+
+				// deactivate add button
+				btnAdd.setEnabled(false);
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -304,14 +332,14 @@ public class BusinessContactGUI2
 		btnAdd.setBounds(176, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnAdd);
 
-		// delete button
+		// "delete" button
 		btnDelete = new JButton("");
 		btnDelete.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement delete button pressed
-				
+
 				// update file status
 			}
 		});
@@ -332,14 +360,14 @@ public class BusinessContactGUI2
 		btnDelete.setBounds(434, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnDelete);
 
-		// update button
+		// "update" button
 		btnUpdate = new JButton("");
 		btnUpdate.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement update button pressed
-				
+
 				// update file status
 			}
 		});
@@ -382,8 +410,8 @@ public class BusinessContactGUI2
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				selectFileWithChooser();
-				updateComboBox();
+				selectFileAndOpen();
+				updateComboBoxOnOpen();
 				fileStatus("saved");
 			}
 		});
@@ -401,7 +429,7 @@ public class BusinessContactGUI2
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement "save" menu item pressed
-				// select file with save option
+				saveFile();
 				// writeFile()
 				// update file status
 			}
@@ -458,7 +486,7 @@ public class BusinessContactGUI2
 
 	protected void fileStatus(String status)
 	{
-		switch(status)
+		switch (status)
 		{
 			case "saved":
 			{
@@ -466,21 +494,29 @@ public class BusinessContactGUI2
 			}
 			case "modified":
 			{
-				//TODO: implement
+				// TODO: implement
 			}
 		}
 	}
 
 	protected void updateComboBox()
 	{
-		contactList = getContactArrayList();
-		for(BusinessContact contact : contactList)
+		for (BusinessContact contact : contactList)
 		{
 			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 		}
 	}
 
-	protected void selectFileWithChooser()
+	protected void updateComboBoxOnOpen()
+	{
+		contactList = deserialize();
+		for (BusinessContact contact : contactList)
+		{
+			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+		}
+	}
+
+	protected void selectFileAndOpen()
 	{
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -489,26 +525,53 @@ public class BusinessContactGUI2
 		{
 			result = fileChooser.showOpenDialog(null);
 		}
-		catch(HeadlessException e)
+		catch (HeadlessException e)
 		{
-			JOptionPane.showMessageDialog(null, "An error occurred while opening "
-					+ "this file.");
+			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
 		}
-		
-		if(result == JFileChooser.CANCEL_OPTION)
+
+		if (result == JFileChooser.CANCEL_OPTION)
 		{
 			return;
 		}
-		
+
 		file = fileChooser.getSelectedFile();
 	}
-	
-	protected ArrayList<BusinessContact> getContactArrayList()
+
+	// For "save as"
+	protected void selectFileAndSaveAs()
 	{
-		contactList = deserialize();
-		return contactList;
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int result = 0;
+		try
+		{
+			result = fileChooser.showOpenDialog(null);
+		}
+		catch (HeadlessException e)
+		{
+			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+		}
+
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			return;
+		}
+
+		file = fileChooser.getSelectedFile();
 	}
-	
+
+	// "save"
+	protected void saveFile()
+	{
+		int n = comboBoxContacts.getItemCount();
+		for (int i = 0; i < n; i++)
+		{
+			BusinessContact bc = contactList.get(i);
+		}
+		serialize();
+	}
+
 	/****************************************************
 	 * Method : deserialize
 	 *
@@ -522,22 +585,49 @@ public class BusinessContactGUI2
 	 ****************************************************/
 	public ArrayList<BusinessContact> deserialize()
 	{
-		ArrayList<BusinessContact> BCList = new ArrayList<BusinessContact>();
-		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getName())))
+		ArrayList<BusinessContact> list = new ArrayList<BusinessContact>();
+		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getAbsolutePath())))
 		{
-			BCList = (ArrayList<BusinessContact>) inStream.readObject();
-			System.out.println(BCList.toString());
+			list = (ArrayList<BusinessContact>) inStream.readObject();
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
 		}
 		catch (IOException e)
 		{
 			System.out.println("A problem occurred during de-serialization.");
 			System.out.println(e.getMessage());
 		}
-		catch(ClassNotFoundException e)
+		catch (ClassNotFoundException e)
 		{
 			System.out.println("A problem occurred during de-serialization.");
 			System.out.println(e.getMessage());
 		}
-		return BCList;
+		return list;
+	}
+
+	/****************************************************
+	 * Method : serialize
+	 *
+	 * Purpose : The serialize method serializes a list and writes it to a file
+	 *
+	 * Parameters : None.
+	 *
+	 * Returns : This method does not return a value.
+	 *
+	 ****************************************************/
+	public void serialize()
+	{
+		try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getPath())))
+		{
+			outStream.writeObject(contactList);
+		}
+		catch (IOException e)
+		{
+			System.out.println("A problem occurred during serialization.");
+			System.out.println(e.getMessage());
+		}
 	}
 }
