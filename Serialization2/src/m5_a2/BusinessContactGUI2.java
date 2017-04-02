@@ -5,23 +5,29 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 /**
@@ -47,9 +53,6 @@ public class BusinessContactGUI2
 	private JButton btnUpdate;
 	private ArrayList<BusinessContact> contactList;
 	private File file;
-	private String selected;
-	private boolean fileSaved;
-	private boolean fileOpened;
 
 	/**
 	 * Launch the application.
@@ -379,12 +382,9 @@ public class BusinessContactGUI2
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "open" menu item pressed
-				// getFile()
-				// openFile()
-				// readFile()
-				// updateComboBox()
-				// update file status
+				selectFileWithChooser();
+				updateComboBox();
+				fileStatus("saved");
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/open.png")));
@@ -454,5 +454,90 @@ public class BusinessContactGUI2
 		});
 		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/about.png")));
 		helpMenu.add(mntmAbout);
+	}
+
+	protected void fileStatus(String status)
+	{
+		switch(status)
+		{
+			case "saved":
+			{
+				// serialize() directly or indirectly
+			}
+			case "modified":
+			{
+				//TODO: implement
+			}
+		}
+		
+	}
+
+	protected void updateComboBox()
+	{
+		contactList = getContactArrayList();
+		for(BusinessContact contact : contactList)
+		{
+			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+		}
+	}
+
+	protected void selectFileWithChooser()
+	{
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int result = 0;
+		try
+		{
+			result = fileChooser.showOpenDialog(null);
+		}
+		catch(HeadlessException e)
+		{
+			JOptionPane.showMessageDialog(null, "An error occurred while opening "
+					+ "this file.");
+		}
+		
+		if(result == JFileChooser.CANCEL_OPTION)
+		{
+			return;
+		}
+		
+		file = fileChooser.getSelectedFile();
+	}
+	
+	protected ArrayList<BusinessContact> getContactArrayList()
+	{
+		contactList = deserialize();
+		return contactList;
+	}
+	
+	/****************************************************
+	 * Method : deserialize
+	 *
+	 * Purpose : The deserialize method reads the file located at fileName and
+	 * stores its contents in a Person ArrayList which it then returns.
+	 *
+	 * Parameters : fileName - The name and location of the file to be written.
+	 *
+	 * Returns : This method returns an ArrayList of Persons.
+	 *
+	 ****************************************************/
+	public ArrayList<BusinessContact> deserialize()
+	{
+		ArrayList<BusinessContact> BCList = new ArrayList<BusinessContact>();
+		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getName())))
+		{
+			BCList = (ArrayList<BusinessContact>) inStream.readObject();
+		}
+		catch (IOException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
+		}
+		catch(ClassNotFoundException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
+		}
+		return BCList;
 	}
 }
