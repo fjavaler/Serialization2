@@ -10,27 +10,33 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-public class Controller implements ActionListener
+public class Controller
 {
 	private View view;
 	private Model model;
+	private ArrayList<JComponent> jComponents;
 	
 	public Controller()
 	{
 		view = new View();
 		model = new Model();
+//		jComponents = view.getActionableComponents();
+//		addActionListenersToJComponents(jComponents);
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e)
+	public static void addActionListenersToJComponents(ArrayList<JComponent> components)
 	{
-		// TODO Auto-generated method stub
+		for(int i = 0; i < components.size(); i++)
+		{
+			System.out.println(components.get(i));
+		}
 	}
-	
-	
 	
 //	protected void fileStatus(String status)
 //	{

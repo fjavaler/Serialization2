@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,6 +48,11 @@ public class View
 	private JButton btnAdd;
 	private JButton btnDelete;
 	private JButton btnUpdate;
+	private JMenuItem mntmAbout;
+	private JMenuItem mntmExit;
+	private JMenuItem mntmSaveAs;
+	private JMenuItem mntmSave;
+	private JMenuItem mntmOpen;
 
 	/**
 	 * Launch the application.
@@ -160,7 +166,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: send event to Controller
+				
 			}
 		});
 		comboBoxContacts.setFont(new Font("Droid Sans", Font.PLAIN, 13));
@@ -242,7 +248,7 @@ public class View
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				
+				Controller.addActionListenersToJComponents(getActionableComponents());
 			}
 		});
 		ImageIcon newIcon = new ImageIcon("src/blueSquareButtonNew.png");
@@ -364,7 +370,7 @@ public class View
 		menuBar.add(fileMenu);
 
 		// "open" menu item
-		JMenuItem mntmOpen = new JMenuItem("Open");
+		mntmOpen = new JMenuItem("Open");
 		mntmOpen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -380,7 +386,7 @@ public class View
 		fileMenu.add(separator);
 
 		// "save" menu item
-		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave = new JMenuItem("Save");
 		mntmSave.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -392,7 +398,7 @@ public class View
 		fileMenu.add(mntmSave);
 
 		// "save as" menu item
-		JMenuItem mntmSaveAs = new JMenuItem("Save As...");
+		mntmSaveAs = new JMenuItem("Save As...");
 		mntmSaveAs.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -408,7 +414,7 @@ public class View
 		fileMenu.add(separator_1);
 
 		// "exit" menu item
-		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit = new JMenuItem("Exit");
 		mntmExit.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -426,7 +432,7 @@ public class View
 		menuBar.add(helpMenu);
 
 		// "about" menu item
-		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -436,5 +442,21 @@ public class View
 		});
 		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/about.png")));
 		helpMenu.add(mntmAbout);
+	}
+	
+	public ArrayList<JComponent> getActionableComponents()
+	{
+		ArrayList<JComponent> components = new ArrayList<JComponent>();
+		components.add(mntmAbout);
+		components.add(mntmSaveAs);
+		components.add(mntmSave);
+		components.add(mntmOpen);
+//		components.add(mntmExit);
+		components.add(comboBoxContacts);
+		components.add(btnNew);
+		components.add(btnAdd);
+		components.add(btnUpdate);
+		components.add(btnDelete);
+		return components;
 	}
 }
