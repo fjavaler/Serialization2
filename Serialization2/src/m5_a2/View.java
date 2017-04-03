@@ -357,7 +357,7 @@ public class View
 		// background image
 		JLabel lblImage = new JLabel("");
 		lblImage.setBounds(0, 0, 600, 378);
-		URL url = BusinessContactGUI2.class.getResource("/businessBackground.jpg");
+		URL url = BusinessContactGUI.class.getResource("/businessBackground.jpg");
 		ImageIcon backgroundImg = new ImageIcon(url);
 		lblImage.setIcon(backgroundImg);
 		frmBusinessContactManagement.getContentPane().add(lblImage);
@@ -378,7 +378,7 @@ public class View
 				
 			}
 		});
-		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/open.png")));
+		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
 		fileMenu.add(mntmOpen);
 
 		// "menu" separator
@@ -394,7 +394,7 @@ public class View
 				
 			}
 		});
-		mntmSave.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/save.png")));
+		mntmSave.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/save.png")));
 		fileMenu.add(mntmSave);
 
 		// "save as" menu item
@@ -406,7 +406,7 @@ public class View
 				// TODO: implement "save as..." menu item pressed
 			}
 		});
-		mntmSaveAs.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/saveAs.png")));
+		mntmSaveAs.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/saveAs.png")));
 		fileMenu.add(mntmSaveAs);
 
 		// menu separator
@@ -424,7 +424,7 @@ public class View
 			}
 		});
 		mntmExit.setIcon(
-				new ImageIcon(BusinessContactGUI2.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
+				new ImageIcon(BusinessContactGUI.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
 		fileMenu.add(mntmExit);
 
 		// "help" menu
@@ -440,7 +440,7 @@ public class View
 				// TODO: Implement "about" pop-up window
 			}
 		});
-		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI2.class.getResource("/about.png")));
+		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/about.png")));
 		helpMenu.add(mntmAbout);
 	}
 	
