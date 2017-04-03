@@ -36,7 +36,7 @@ import javax.swing.JSeparator;
 /**
  * This class creates a BusinessContact graphical user interface. A
  * BusinessContactGUI contains a JFrame, JTextFields, a JComboBox, JButtons, an
- * ArrayList, a File, a String and a boolean.
+ * ArrayList, a File, a String and a boolean. Test
  * 
  * @author Frederick Javalera
  */
