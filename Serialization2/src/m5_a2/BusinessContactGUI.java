@@ -509,7 +509,7 @@ public class BusinessContactGUI
 
 	protected void updateComboBoxOnOpen()
 	{
-		contactList = deserialize();
+		deserialize();
 		for (BusinessContact contact : contactList)
 		{
 			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
@@ -583,12 +583,12 @@ public class BusinessContactGUI
 	 * Returns : This method returns an ArrayList of Persons.
 	 *
 	 ****************************************************/
-	public ArrayList<BusinessContact> deserialize()
+	@SuppressWarnings("unchecked")
+	public void deserialize()
 	{
-		ArrayList<BusinessContact> list = new ArrayList<BusinessContact>();
-		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("contacts.ser")))
+		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getPath())))
 		{
-			list = (ArrayList<BusinessContact>) inStream.readObject();
+			contactList = (ArrayList<BusinessContact>) inStream.readObject();
 		}
 		catch (FileNotFoundException e)
 		{
@@ -605,7 +605,6 @@ public class BusinessContactGUI
 			System.out.println("A problem occurred during de-serialization.");
 			System.out.println(e.getMessage());
 		}
-		return list;
 	}
 
 	/****************************************************
