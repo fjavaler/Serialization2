@@ -1,18 +1,15 @@
 package m5_a2;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
-
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.net.URL;
 import java.util.ArrayList;
-
 import javax.swing.JTextField;
-
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
@@ -22,6 +19,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -29,10 +27,10 @@ import java.io.ObjectOutputStream;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
-
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 
 /**
@@ -56,11 +54,8 @@ public class BusinessContactGUI
 	private JButton btnAdd;
 	private JButton btnDelete;
 	private JButton btnUpdate;
-	private ArrayList<BusinessContact> contactList = new ArrayList<BusinessContact>();
-	private File file = null;
-	private String selected;
-	private boolean fileSaved = false;
-	private boolean fileOpened = false;
+	private ArrayList<BusinessContact> contactList;
+	private File file;
 
 	/**
 	 * Launch the application.
@@ -125,6 +120,9 @@ public class BusinessContactGUI
 		lblContacts.setBounds(3, 2, 72, 15);
 		panelContacts.add(lblContacts);
 
+		// initialize contact array list
+		contactList = new ArrayList<BusinessContact>();
+
 		// first name
 		JPanel panelFirstName = new JPanel();
 		panelFirstName.setForeground(SystemColor.text);
@@ -174,7 +172,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				selected = (String) comboBoxContacts.getSelectedItem();
+				// TODO: implement comboBox selection
 			}
 		});
 		comboBoxContacts.setFont(new Font("Droid Sans", Font.PLAIN, 13));
@@ -250,14 +248,21 @@ public class BusinessContactGUI
 		textFieldCompany.setBounds(218, 230, 361, 28);
 		frmBusinessContactManagement.getContentPane().add(textFieldCompany);
 
-		// new button
+		// "new" button
 		btnNew = new JButton("");
 		btnNew.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				reset();
+				// clear text fields
+				textFieldFirst.setText("");
+				textFieldLast.setText("");
+				textFieldPhone.setText("");
+				textFieldEmail.setText("");
+				textFieldCompany.setText("");
+				// set add button to true
 				btnAdd.setEnabled(true);
+				// update file status
 			}
 		});
 		ImageIcon newIcon = new ImageIcon("src/blueSquareButtonNew.png");
@@ -278,7 +283,7 @@ public class BusinessContactGUI
 		btnNew.setBounds(47, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnNew);
 
-		// add button
+		// "add" button
 		btnAdd = new JButton("");
 		ImageIcon addIcon = new ImageIcon("src/blueSquareButtonAdd.png");
 		try
@@ -296,15 +301,28 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// create new contact
-				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
+				// construct new contact
+				BusinessContact contact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
-				// add new contact to contact list
-				contactList.add(newContact);
-				// disable the button
+				// add contact to ArrayList
+				contactList.add(contact);
+				if (file != null)
+				{
+					serialize();
+				}
+				else
+				{
+					// do not serialize here. Serialize later or it will fail
+					// because no file has been chosen yet.
+					// update contactList comboBox
+					updateComboBox();
+				}
+
+				// update file status
+				// fileStatus("saved");
+
+				// deactivate add button
 				btnAdd.setEnabled(false);
-				// update contact list and serialize
-				updateComboBoxContacts();
 			}
 		});
 		btnAdd.setForeground(new Color(0, 0, 0));
@@ -314,12 +332,15 @@ public class BusinessContactGUI
 		btnAdd.setBounds(176, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnAdd);
 
-		// delete button
+		// "delete" button
 		btnDelete = new JButton("");
 		btnDelete.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// TODO: implement delete button pressed
+
+				// update file status
 			}
 		});
 		ImageIcon deleteIcon = new ImageIcon("src/blueSquareButtonDelete.png");
@@ -339,12 +360,15 @@ public class BusinessContactGUI
 		btnDelete.setBounds(434, 283, 117, 39);
 		frmBusinessContactManagement.getContentPane().add(btnDelete);
 
-		// update button
+		// "update" button
 		btnUpdate = new JButton("");
 		btnUpdate.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// TODO: implement update button pressed
+
+				// update file status
 			}
 		});
 		ImageIcon updateIcon = new ImageIcon("src/blueSquareButtonUpdate.png");
@@ -376,69 +400,66 @@ public class BusinessContactGUI
 		JMenuBar menuBar = new JMenuBar();
 		frmBusinessContactManagement.setJMenuBar(menuBar);
 
+		// "file" menu
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
 
+		// "open" menu item
 		JMenuItem mntmOpen = new JMenuItem("Open");
 		mntmOpen.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				//get the file
-				file = retrieveFileToOpen();
-				//open the file
-				openFile();
-				//update the comboBox entries
-				updateComboBoxContacts();
-				
-				fileSaved = false;
-				fileOpened = true;
+				selectFileAndOpen();
+				updateComboBoxOnOpen();
+				fileStatus("saved");
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
 		fileMenu.add(mntmOpen);
 
+		// "menu" separator
 		JSeparator separator = new JSeparator();
 		fileMenu.add(separator);
 
+		// "save" menu item
 		JMenuItem mntmSave = new JMenuItem("Save");
 		mntmSave.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (fileSaved = false)
-				{
-					file = retrieveFileToSave();
-					saveFile();
-				}
-				else
-				{
-					saveFile();
-				}
+				// TODO: implement "save" menu item pressed
+				saveFile();
+				// writeFile()
+				// update file status
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/save.png")));
 		fileMenu.add(mntmSave);
 
+		// "save as" menu item
 		JMenuItem mntmSaveAs = new JMenuItem("Save As...");
 		mntmSaveAs.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Implement "Save as"
+				// TODO: implement "save as..." menu item pressed
 			}
 		});
 		mntmSaveAs.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/saveAs.png")));
 		fileMenu.add(mntmSaveAs);
 
+		// menu separator
 		JSeparator separator_1 = new JSeparator();
 		fileMenu.add(separator_1);
 
+		// "exit" menu item
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mntmExit.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// exit
 				System.exit(0);
 			}
 		});
@@ -446,9 +467,11 @@ public class BusinessContactGUI
 				new ImageIcon(BusinessContactGUI.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
 		fileMenu.add(mntmExit);
 
+		// "help" menu
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
 
+		// "about" menu item
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener()
 		{
@@ -461,51 +484,92 @@ public class BusinessContactGUI
 		helpMenu.add(mntmAbout);
 	}
 
-	/****************************************************
-	 * Method : BusinessContact (constructor)
-	 *
-	 * Purpose : The Sort method sorts an array of integers using a standard
-	 * bubble sort. The array is sorted in place.
-	 *
-	 * Parameters : array - an array of integers number_of_elements - the number
-	 * of elements in the array
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	private void reset()
+	protected void fileStatus(String status)
 	{
-		textFieldCompany.setText("");
-		textFieldEmail.setText("");
-		textFieldFirst.setText("");
-		textFieldLast.setText("");
-		textFieldPhone.setText("");
-		btnAdd.setEnabled(false);
+		switch (status)
+		{
+			case "saved":
+			{
+				// serialize() directly or indirectly
+			}
+			case "modified":
+			{
+				// TODO: implement
+			}
+		}
 	}
 
-	/****************************************************
-	 * Method : serialize
-	 *
-	 * Purpose : The serialize method serializes an ArrayList and writes it to
-	 * file, fileName.
-	 *
-	 * Parameters : None.
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	public void serialize()
+	protected void updateComboBox()
 	{
-//		file = retrieveFileToOpen();
-		try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getAbsolutePath())))
+		for (BusinessContact contact : contactList)
 		{
-			outStream.writeObject(contactList);
+			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 		}
-		catch (IOException e)
+	}
+
+	protected void updateComboBoxOnOpen()
+	{
+		contactList = deserialize();
+		for (BusinessContact contact : contactList)
 		{
-			System.out.println("A problem occurred during serialization.");
-			System.out.println(e.getMessage());
+			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
 		}
+	}
+
+	protected void selectFileAndOpen()
+	{
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int result = 0;
+		try
+		{
+			result = fileChooser.showOpenDialog(null);
+		}
+		catch (HeadlessException e)
+		{
+			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+		}
+
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			return;
+		}
+
+		file = fileChooser.getSelectedFile();
+	}
+
+	// For "save as"
+	protected void selectFileAndSaveAs()
+	{
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		int result = 0;
+		try
+		{
+			result = fileChooser.showOpenDialog(null);
+		}
+		catch (HeadlessException e)
+		{
+			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+		}
+
+		if (result == JFileChooser.CANCEL_OPTION)
+		{
+			return;
+		}
+
+		file = fileChooser.getSelectedFile();
+	}
+
+	// "save"
+	protected void saveFile()
+	{
+		int n = comboBoxContacts.getItemCount();
+		for (int i = 0; i < n; i++)
+		{
+			BusinessContact bc = contactList.get(i);
+		}
+		serialize();
 	}
 
 	/****************************************************
@@ -522,153 +586,48 @@ public class BusinessContactGUI
 	public ArrayList<BusinessContact> deserialize()
 	{
 		ArrayList<BusinessContact> list = new ArrayList<BusinessContact>();
-//		file = retrieveFileToOpen();
-		
-		//test
-//		if (file != null)
-//		{
-			try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getAbsolutePath())))
-			{
-				list = (ArrayList<BusinessContact>) inStream.readObject();
-			}
-			catch (IOException e)
-			{
-				System.out.println("A problem occurred during de-serialization.");
-				System.out.println(e.getMessage());
-			}
-			catch (ClassNotFoundException e)
-			{
-				System.out.println("A problem occurred during de-serialization.");
-				System.out.println(e.getMessage());
-			}
-//		}
-//		else
-//		{
-//		}
+		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream("contacts.ser")))
+		{
+			list = (ArrayList<BusinessContact>) inStream.readObject();
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
+		}
+		catch (IOException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
+		}
+		catch (ClassNotFoundException e)
+		{
+			System.out.println("A problem occurred during de-serialization.");
+			System.out.println(e.getMessage());
+		}
 		return list;
 	}
 
 	/****************************************************
-	 * Method : BusinessContact (constructor)
+	 * Method : serialize
 	 *
-	 * Purpose : The Sort method sorts an array of integers using a standard
-	 * bubble sort. The array is sorted in place.
-	 *
-	 * Parameters : array - an array of integers number_of_elements - the number
-	 * of elements in the array
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	public File retrieveFileToOpen()
-	{
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showOpenDialog(null);
-		switch (result)
-		{
-			case JFileChooser.APPROVE_OPTION:
-			{
-				file = fileChooser.getSelectedFile();
-				return file;
-			}
-		}
-		return file = null;
-	}
-
-	/****************************************************
-	 * Method : BusinessContact (constructor)
-	 *
-	 * Purpose : The Sort method sorts an array of integers using a standard
-	 * bubble sort. The array is sorted in place.
-	 *
-	 * Parameters : array - an array of integers number_of_elements - the number
-	 * of elements in the array
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	public File retrieveFileToSave()
-	{
-		JFileChooser fileChooser = new JFileChooser();
-		int result = fileChooser.showSaveDialog(null);
-		switch (result)
-		{
-			case JFileChooser.APPROVE_OPTION:
-			{
-				file = fileChooser.getSelectedFile();
-				return file;
-			}
-		}
-		return file = null;
-	}
-
-	/****************************************************
-	 * Method : BusinessContact (constructor)
-	 *
-	 * Purpose : The Sort method sorts an array of integers using a standard
-	 * bubble sort. The array is sorted in place.
-	 *
-	 * Parameters : array - an array of integers number_of_elements - the number
-	 * of elements in the array
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	public void saveFile()
-	{
-		serialize();
-	}
-
-	/****************************************************
-	 * Method : BusinessContact (constructor)
-	 *
-	 * Purpose : The Sort method sorts an array of integers using a standard
-	 * bubble sort. The array is sorted in place.
-	 *
-	 * Parameters : array - an array of integers number_of_elements - the number
-	 * of elements in the array
-	 *
-	 * Returns : This method does not return a value.
-	 *
-	 ****************************************************/
-	public void openFile()
-	{
-		// Retrieves list from save file
-		contactList = deserialize();
-		updateComboBoxContacts();
-	}
-
-	/****************************************************
-	 * Method : updateContactList
-	 *
-	 * Purpose : The UpdateContactList method updates the JcomboBoxList of
-	 * contacts to reflect its current status.
+	 * Purpose : The serialize method serializes a list and writes it to a file
 	 *
 	 * Parameters : None.
 	 *
 	 * Returns : This method does not return a value.
 	 *
 	 ****************************************************/
-	private void updateComboBoxContacts()
+	public void serialize()
 	{
-		if (fileOpened = false)
+		try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getPath())))
 		{
-			for (BusinessContact contact : contactList)
-			{
-				StringBuilder first = new StringBuilder();
-				first.append(contact.getFirstName());
-				Character c = Character.toUpperCase(first.charAt(0));
-				String upperCaseFirstName = c + first.substring(1, first.length());
-				contact.setFirstName(upperCaseFirstName);
-
-				StringBuilder last = new StringBuilder();
-				last.append(contact.getLastName());
-				Character c2 = Character.toUpperCase(last.charAt(0));
-				String upperCaseLastName = c2 + last.substring(1, last.length());
-				contact.setLastName(upperCaseLastName);
-
-				comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
-			}
+			outStream.writeObject(contactList);
+		}
+		catch (IOException e)
+		{
+			System.out.println("A problem occurred during serialization.");
+			System.out.println(e.getMessage());
 		}
 	}
 }
