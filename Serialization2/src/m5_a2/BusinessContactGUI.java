@@ -124,6 +124,7 @@ public class BusinessContactGUI
 
 		// initialize contact array list
 		contactList = new ArrayList<BusinessContact>();
+		selected = null;
 		
 		// first name
 		JPanel panelFirstName = new JPanel();
@@ -316,13 +317,11 @@ public class BusinessContactGUI
 				}
 				else
 				{
-					// do not serialize here. Serialize later or it will fail
-					// because no file has been chosen yet.
 					// update contactList comboBox
 					updateComboBox();
 				}
 
-				// update file status
+				// TODO: update file status
 				// fileStatus("saved");
 
 				// deactivate add button
