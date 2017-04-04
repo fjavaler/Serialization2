@@ -125,7 +125,7 @@ public class BusinessContactGUI
 		// initialize contact array list
 		contactList = new ArrayList<BusinessContact>();
 		selected = null;
-		
+
 		// first name
 		JPanel panelFirstName = new JPanel();
 		panelFirstName.setForeground(SystemColor.text);
@@ -175,7 +175,15 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				selected = (BusinessContact) comboBoxContacts.getSelectedItem();
+				if (selected != null)
+				{
+					selected = (BusinessContact) comboBoxContacts.getSelectedItem();
+					textFieldFirst.setText(selected.getFirstName());
+					textFieldLast.setText(selected.getLastName());
+					textFieldPhone.setText(selected.getPhoneNumber());
+					textFieldEmail.setText(selected.getEmailAddress());
+					textFieldCompany.setText(selected.getCompany());
+				}
 			}
 		});
 		comboBoxContacts.setFont(new Font("Droid Sans", Font.PLAIN, 13));
@@ -318,7 +326,7 @@ public class BusinessContactGUI
 				else
 				{
 					// update contactList comboBox
-					selectFileAndSaveAs();
+					// selectFileAndSaveAs();
 					updateComboBox();
 				}
 
@@ -343,20 +351,14 @@ public class BusinessContactGUI
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement "delete" button pressed
-				for(int i = 0; i < comboBoxContacts.getItemCount(); i++)
+				for (int i = 0; i < comboBoxContacts.getItemCount(); i++)
 				{
 					String name = comboBoxContacts.getSelectedItem().toString();
 					String compare = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
-					if(name.equals(compare))
+					if (name.equals(compare))
 					{
+						contactList.remove(i);
 						comboBoxContacts.removeItemAt(i);
-					}
-				}
-				for(BusinessContact contact : contactList)
-				{
-					if(selected.equals(contact))
-					{
-						contactList.remove(contact);
 					}
 				}
 				// update file status
@@ -527,18 +529,18 @@ public class BusinessContactGUI
 		{
 			int size = comboBoxContacts.getItemCount();
 			// TODO: update
-			for(int i = 0; i < size; i++)
+			for (int i = 0; i < size; i++)
 			{
 				String name = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
 				String compare = comboBoxContacts.getSelectedItem().toString();
-				if(name.equals(compare))
+				if (name.equals(compare))
 				{
 					contains = true;
 				}
 			}
-			if(contains == true)
+			if (contains == true)
 			{
-				
+
 			}
 			else
 			{
@@ -626,7 +628,6 @@ public class BusinessContactGUI
 	 ****************************************************/
 	public void deserialize()
 	{
-		System.out.println(file.getPath());
 		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getPath())))
 		{
 			contactList = (ArrayList<BusinessContact>) inStream.readObject();
