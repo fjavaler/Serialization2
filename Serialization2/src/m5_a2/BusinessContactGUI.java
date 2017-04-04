@@ -315,6 +315,7 @@ public class BusinessContactGUI
 					// do not serialize here. Serialize later or it will fail
 					// because no file has been chosen yet.
 					// update contactList comboBox
+					selectFileAndSaveAs();
 					updateComboBox();
 				}
 
@@ -527,7 +528,7 @@ public class BusinessContactGUI
 		}
 		catch (HeadlessException e)
 		{
-			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+			JOptionPane.showMessageDialog(null, "An error occurred while opening this file.");
 		}
 
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -559,6 +560,7 @@ public class BusinessContactGUI
 		}
 
 		file = fileChooser.getSelectedFile();
+		serialize();
 	}
 
 	// "save"
@@ -583,9 +585,9 @@ public class BusinessContactGUI
 	 * Returns : This method returns an ArrayList of Persons.
 	 *
 	 ****************************************************/
-	@SuppressWarnings("unchecked")
 	public void deserialize()
 	{
+		System.out.println(file.getPath());
 		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getPath())))
 		{
 			contactList = (ArrayList<BusinessContact>) inStream.readObject();
