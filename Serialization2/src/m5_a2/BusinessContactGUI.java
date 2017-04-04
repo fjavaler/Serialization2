@@ -56,6 +56,7 @@ public class BusinessContactGUI
 	private JButton btnUpdate;
 	private ArrayList<BusinessContact> contactList;
 	private File file;
+	private BusinessContact selected;
 
 	/**
 	 * Launch the application.
@@ -122,7 +123,7 @@ public class BusinessContactGUI
 
 		// initialize contact array list
 		contactList = new ArrayList<BusinessContact>();
-
+		
 		// first name
 		JPanel panelFirstName = new JPanel();
 		panelFirstName.setForeground(SystemColor.text);
@@ -172,7 +173,8 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement comboBox selection
+				comboBoxContacts.getSelectedItem().toString();
+				selected = (BusinessContact) comboBoxContacts.getSelectedItem();
 			}
 		});
 		comboBoxContacts.setFont(new Font("Droid Sans", Font.PLAIN, 13));
@@ -306,9 +308,11 @@ public class BusinessContactGUI
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
 				// add contact to ArrayList
 				contactList.add(contact);
+				selected = contact;
 				if (file != null)
 				{
 					serialize();
+					updateComboBox();
 				}
 				else
 				{
@@ -338,8 +342,8 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement delete button pressed
-
+				// TODO: implement "delete" button pressed
+				
 				// update file status
 			}
 		});
@@ -366,7 +370,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement update button pressed
+				// TODO: implement "update" button pressed
 
 				// update file status
 			}
@@ -430,7 +434,6 @@ public class BusinessContactGUI
 			{
 				// TODO: implement "save" menu item pressed
 				saveFile();
-				// writeFile()
 				// update file status
 			}
 		});
@@ -443,7 +446,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "save as..." menu item pressed
+				selectFileAndSaveAs();
 			}
 		});
 		mntmSaveAs.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/saveAs.png")));
@@ -494,7 +497,7 @@ public class BusinessContactGUI
 			}
 			case "modified":
 			{
-				// TODO: implement
+				// TODO: implement "modified" file status
 			}
 		}
 	}
@@ -503,13 +506,20 @@ public class BusinessContactGUI
 	{
 		for (BusinessContact contact : contactList)
 		{
-			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+			int size = comboBoxContacts.getItemCount();
+			for(int i = 0; i < size; i++)
+			{
+				String name = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
+				String compare = comboBoxContacts.getSelectedItem().toString();
+				if(name.equals(compare))
+				{
+				}
+			}
 		}
 	}
 
 	protected void updateComboBoxOnOpen()
 	{
-		deserialize();
 		for (BusinessContact contact : contactList)
 		{
 			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
@@ -527,7 +537,7 @@ public class BusinessContactGUI
 		}
 		catch (HeadlessException e)
 		{
-			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+			JOptionPane.showMessageDialog(null, "An error occurred while opening this file.");
 		}
 
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -536,6 +546,7 @@ public class BusinessContactGUI
 		}
 
 		file = fileChooser.getSelectedFile();
+		deserialize();
 	}
 
 	// For "save as"
@@ -546,11 +557,11 @@ public class BusinessContactGUI
 		int result = 0;
 		try
 		{
-			result = fileChooser.showOpenDialog(null);
+			result = fileChooser.showSaveDialog(null);
 		}
 		catch (HeadlessException e)
 		{
-			JOptionPane.showMessageDialog(null, "An error occurred while opening " + "this file.");
+			JOptionPane.showMessageDialog(null, "An error occurred while opening this file.");
 		}
 
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -559,6 +570,7 @@ public class BusinessContactGUI
 		}
 
 		file = fileChooser.getSelectedFile();
+		serialize();
 	}
 
 	// "save"
