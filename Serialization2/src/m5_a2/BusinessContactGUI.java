@@ -359,7 +359,6 @@ public class BusinessContactGUI
 						contactList.remove(contact);
 					}
 				}
-				
 				// update file status
 			}
 		});
