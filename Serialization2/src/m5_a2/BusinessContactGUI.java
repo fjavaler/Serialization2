@@ -49,7 +49,7 @@ public class BusinessContactGUI
 	private JTextField textFieldPhone;
 	private JTextField textFieldEmail;
 	private JTextField textFieldCompany;
-	private JComboBox<String> comboBoxContacts;
+	private JComboBox<BusinessContact> comboBoxContacts;
 	private JButton btnNew;
 	private JButton btnAdd;
 	private JButton btnDelete;
@@ -57,6 +57,7 @@ public class BusinessContactGUI
 	private ArrayList<BusinessContact> contactList;
 	private File file;
 	private BusinessContact selected;
+	private AboutWindow aboutWindow;
 
 	/**
 	 * Launch the application.
@@ -168,12 +169,11 @@ public class BusinessContactGUI
 		frmBusinessContactManagement.getContentPane().add(textFieldLast);
 		textFieldLast.setColumns(10);
 
-		comboBoxContacts = new JComboBox<String>();
+		comboBoxContacts = new JComboBox<BusinessContact>();
 		comboBoxContacts.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				comboBoxContacts.getSelectedItem().toString();
 				selected = (BusinessContact) comboBoxContacts.getSelectedItem();
 			}
 		});
@@ -343,6 +343,22 @@ public class BusinessContactGUI
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: implement "delete" button pressed
+				for(int i = 0; i < comboBoxContacts.getItemCount(); i++)
+				{
+					String name = comboBoxContacts.getSelectedItem().toString();
+					String compare = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
+					if(name.equals(compare))
+					{
+						comboBoxContacts.removeItemAt(i);
+					}
+				}
+				for(BusinessContact contact : contactList)
+				{
+					if(selected.equals(contact))
+					{
+						contactList.remove(contact);
+					}
+				}
 				
 				// update file status
 			}
@@ -481,6 +497,9 @@ public class BusinessContactGUI
 			public void actionPerformed(ActionEvent e)
 			{
 				// TODO: Implement "about" pop-up window
+				aboutWindow = new AboutWindow();
+				aboutWindow.getFrame().setLocationRelativeTo(null);
+				aboutWindow.getFrame().setVisible(true);
 			}
 		});
 		mntmAbout.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/about.png")));
@@ -504,16 +523,27 @@ public class BusinessContactGUI
 
 	protected void updateComboBox()
 	{
+		boolean contains = false;
 		for (BusinessContact contact : contactList)
 		{
 			int size = comboBoxContacts.getItemCount();
+			// TODO: update
 			for(int i = 0; i < size; i++)
 			{
 				String name = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
 				String compare = comboBoxContacts.getSelectedItem().toString();
 				if(name.equals(compare))
 				{
+					contains = true;
 				}
+			}
+			if(contains == true)
+			{
+				
+			}
+			else
+			{
+				comboBoxContacts.addItem(contact);
 			}
 		}
 	}
@@ -522,7 +552,7 @@ public class BusinessContactGUI
 	{
 		for (BusinessContact contact : contactList)
 		{
-			comboBoxContacts.addItem(contact.getFirstName() + " " + contact.getLastName());
+			comboBoxContacts.addItem(contact);
 		}
 	}
 

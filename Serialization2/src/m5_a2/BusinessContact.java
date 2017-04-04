@@ -208,7 +208,37 @@ public class BusinessContact implements Serializable
 	@Override
 	public String toString()
 	{
-		return "BusinessContact [firstName=" + firstName + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber
-				+ ", emailAddress=" + emailAddress + ", company=" + company + "]";
+		return firstName + " " + lastName;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(!(obj instanceof BusinessContact))
+		{
+			return false;
+		}
+		BusinessContact compare = (BusinessContact) obj;
+		if(!compare.getFirstName().equals(this.getFirstName()))
+		{
+			return false;
+		}
+		if(!compare.getLastName().equals(this.getLastName()))
+		{
+			return false;
+		}
+		if(!compare.getPhoneNumber().equals(this.getPhoneNumber()))
+		{
+			return false;
+		}
+		if(!compare.getEmailAddress().equals(this.getEmailAddress()))
+		{
+			return false;
+		}
+		if(!compare.getCompany().equals(this.getCompany()))
+		{
+			return false;
+		}
+		return true;
 	}
 }
