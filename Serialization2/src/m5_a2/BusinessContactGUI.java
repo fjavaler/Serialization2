@@ -273,7 +273,6 @@ public class BusinessContactGUI
 				textFieldCompany.setText("");
 				// set add button to true
 				btnAdd.setEnabled(true);
-				// update file status
 			}
 		});
 		ImageIcon newIcon = new ImageIcon("src/blueSquareButtonNew.png");
@@ -326,12 +325,8 @@ public class BusinessContactGUI
 				else
 				{
 					// update contactList comboBox
-					// selectFileAndSaveAs();
 					updateComboBox();
 				}
-
-				// TODO: update file status
-				// fileStatus("saved");
 
 				// deactivate add button
 				btnAdd.setEnabled(false);
@@ -350,7 +345,6 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "delete" button pressed
 				for (int i = 0; i < comboBoxContacts.getItemCount(); i++)
 				{
 					String name = comboBoxContacts.getSelectedItem().toString();
@@ -361,7 +355,6 @@ public class BusinessContactGUI
 						comboBoxContacts.removeItemAt(i);
 					}
 				}
-				// update file status
 			}
 		});
 		ImageIcon deleteIcon = new ImageIcon("src/blueSquareButtonDelete.png");
@@ -387,9 +380,26 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "update" button pressed
-
-				// update file status
+//				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
+//						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
+//				contactList.remove(comboBoxContacts.getSelectedItem());
+//				contactList.add(newContact);
+//				comboBoxContacts.setSelectedItem(newContact);
+				BusinessContact temp = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
+						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
+				for(BusinessContact contact : contactList)
+				{
+					if( (contact.getFirstName().equals(temp.getFirstName()) && (contact.getLastName().equals(temp.getLastName()))))
+					{
+						contact.setFirstName(temp.getFirstName());
+						contact.setLastName(temp.getLastName());
+						contact.setPhoneNumber(temp.getPhoneNumber());
+						contact.setEmailAddress(temp.getEmailAddress());
+						contact.setCompany(temp.getCompany());
+					}
+				}
+				serialize();
+				updateComboBox();
 			}
 		});
 		ImageIcon updateIcon = new ImageIcon("src/blueSquareButtonUpdate.png");
@@ -433,7 +443,13 @@ public class BusinessContactGUI
 			{
 				selectFileAndOpen();
 				updateComboBoxOnOpen();
-				fileStatus("saved");
+				BusinessContact temp = (BusinessContact) comboBoxContacts.getSelectedItem();
+				textFieldFirst.setText(temp.getFirstName());
+				textFieldLast.setText(temp.getLastName());
+				textFieldPhone.setText(temp.getPhoneNumber());
+				textFieldEmail.setText(temp.getEmailAddress());
+				textFieldCompany.setText(temp.getCompany());
+				selected = temp;
 			}
 		});
 		mntmOpen.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/open.png")));
@@ -449,9 +465,7 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: implement "save" menu item pressed
 				saveFile();
-				// update file status
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(BusinessContactGUI.class.getResource("/save.png")));
@@ -497,7 +511,6 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO: Implement "about" pop-up window
 				aboutWindow = new AboutWindow();
 				aboutWindow.getFrame().setLocationRelativeTo(null);
 				aboutWindow.getFrame().setVisible(true);
@@ -507,44 +520,27 @@ public class BusinessContactGUI
 		helpMenu.add(mntmAbout);
 	}
 
-	protected void fileStatus(String status)
-	{
-		switch (status)
-		{
-			case "saved":
-			{
-				// serialize() directly or indirectly
-			}
-			case "modified":
-			{
-				// TODO: implement "modified" file status
-			}
-		}
-	}
-
 	protected void updateComboBox()
 	{
-		boolean contains = false;
+		// search through contactList
 		for (BusinessContact contact : contactList)
 		{
-			int size = comboBoxContacts.getItemCount();
-			// TODO: update
-			for (int i = 0; i < size; i++)
+			boolean flag = false;
+			// if comboBoxContacts doesn't contain contact
+			for (int i = 0; i < comboBoxContacts.getItemCount(); i++)
 			{
-				String name = contactList.get(i).getFirstName() + " " + contactList.get(i).getLastName();
-				String compare = comboBoxContacts.getSelectedItem().toString();
-				if (name.equals(compare))
+				BusinessContact temp = comboBoxContacts.getItemAt(i);
+				if ((temp.getFirstName().equals(contact.getFirstName())) && (temp.getLastName().equals(contact.getLastName())))
 				{
-					contains = true;
+					flag = true;
+					break;
 				}
 			}
-			if (contains == true)
+			if (flag == false)
 			{
-
-			}
-			else
-			{
+				// add contact
 				comboBoxContacts.addItem(contact);
+				comboBoxContacts.setSelectedItem(contact);
 			}
 		}
 	}
@@ -607,11 +603,6 @@ public class BusinessContactGUI
 	// "save"
 	protected void saveFile()
 	{
-		int n = comboBoxContacts.getItemCount();
-		for (int i = 0; i < n; i++)
-		{
-			BusinessContact bc = contactList.get(i);
-		}
 		serialize();
 	}
 
@@ -626,6 +617,7 @@ public class BusinessContactGUI
 	 * Returns : This method returns an ArrayList of Persons.
 	 *
 	 ****************************************************/
+	@SuppressWarnings("unchecked")
 	public void deserialize()
 	{
 		try (ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(file.getPath())))
@@ -661,14 +653,30 @@ public class BusinessContactGUI
 	 ****************************************************/
 	public void serialize()
 	{
-		try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getPath())))
+		if (file != null)
 		{
-			outStream.writeObject(contactList);
+			try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getPath())))
+			{
+				outStream.writeObject(contactList);
+			}
+			catch (IOException e)
+			{
+				System.out.println("A problem occurred during serialization.");
+				System.out.println(e.getMessage());
+			}
 		}
-		catch (IOException e)
+		else
 		{
-			System.out.println("A problem occurred during serialization.");
-			System.out.println(e.getMessage());
+			selectFileAndSaveAs();
+			try (ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(file.getPath())))
+			{
+				outStream.writeObject(contactList);
+			}
+			catch (IOException e)
+			{
+				System.out.println("A problem occurred during serialization.");
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }
