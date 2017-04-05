@@ -295,8 +295,7 @@ public class BusinessContactGUI
 
 		// "add" button
 		btnAdd = new JButton("");
-//		ImageIcon addIcon = new ImageIcon("src/m5_a2/blueSquareButtonAdd.png");
-		ImageIcon addIcon = new ImageIcon("/blueSquareButtonAdd.png");
+		ImageIcon addIcon = new ImageIcon("src/blueSquareButtonAdd.png");
 		
 		try
 		{
