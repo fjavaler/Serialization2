@@ -275,12 +275,12 @@ public class BusinessContactGUI
 				btnAdd.setEnabled(true);
 			}
 		});
-		ImageIcon newIcon = new ImageIcon("src/blueSquareButtonNew.png");
+		ImageIcon newIcon = new ImageIcon(BusinessContactGUI.class.getResource("/images/blueSquareButtonNew.png"));
 		try
 		{
 			Image img = newIcon.getImage();
-			Image newimg = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
-			newIcon = new ImageIcon(newimg);
+			img = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
+			newIcon = new ImageIcon(img);
 			btnNew.setIcon(newIcon);
 		}
 		catch (Exception e)
@@ -295,13 +295,13 @@ public class BusinessContactGUI
 
 		// "add" button
 		btnAdd = new JButton("");
-		ImageIcon addIcon = new ImageIcon("src/blueSquareButtonAdd.png");
+		ImageIcon addIcon = new ImageIcon(BusinessContactGUI.class.getResource("/images/blueSquareButtonAdd.png"));
 		
 		try
 		{
 			Image img = addIcon.getImage();
-			Image newimg = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
-			addIcon = new ImageIcon(newimg);
+			img = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
+			addIcon = new ImageIcon(img);
 			btnAdd.setIcon(addIcon);
 		}
 		catch (Exception e)
@@ -358,12 +358,12 @@ public class BusinessContactGUI
 				}
 			}
 		});
-		ImageIcon deleteIcon = new ImageIcon("src/blueSquareButtonDelete.png");
+		ImageIcon deleteIcon = new ImageIcon(BusinessContactGUI.class.getResource("/images/blueSquareButtonDelete.png"));
 		try
 		{
 			Image img = deleteIcon.getImage();
-			Image newimg = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
-			deleteIcon = new ImageIcon(newimg);
+			img = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
+			deleteIcon = new ImageIcon(img);
 			btnDelete.setIcon(deleteIcon);
 		}
 		catch (Exception e)
@@ -381,11 +381,6 @@ public class BusinessContactGUI
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-//				BusinessContact newContact = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
-//						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
-//				contactList.remove(comboBoxContacts.getSelectedItem());
-//				contactList.add(newContact);
-//				comboBoxContacts.setSelectedItem(newContact);
 				BusinessContact temp = new BusinessContact(textFieldFirst.getText(), textFieldLast.getText(),
 						textFieldPhone.getText(), textFieldEmail.getText(), textFieldCompany.getText());
 				for(BusinessContact contact : contactList)
@@ -403,12 +398,12 @@ public class BusinessContactGUI
 				updateComboBox();
 			}
 		});
-		ImageIcon updateIcon = new ImageIcon("src/blueSquareButtonUpdate.png");
+		ImageIcon updateIcon = new ImageIcon(BusinessContactGUI.class.getResource("/images/blueSquareButtonUpdate.png"));
 		try
 		{
 			Image img = updateIcon.getImage();
-			Image newimg = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
-			updateIcon = new ImageIcon(newimg);
+			img = img.getScaledInstance(117, 39, java.awt.Image.SCALE_SMOOTH);
+			updateIcon = new ImageIcon(img);
 			btnUpdate.setIcon(updateIcon);
 		}
 		catch (Exception e)
