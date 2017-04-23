@@ -73,11 +73,9 @@ public class BusinessContact implements Serializable
 	}
 
 	/****************************************************
-	 * Method     : Sort
+	 * Method     : ValidatePhone
 	 *
-	 * Purpose    : The Sort method sorts an array of
-	 *              integers using a standard bubble sort.
-	 *              The array is sorted in place.
+	 * Purpose    : The ValidatePhone method TODO:
 	 *
 	 * Parameters : array              - an array of integers
 	 *              number_of_elements - the number of elements
