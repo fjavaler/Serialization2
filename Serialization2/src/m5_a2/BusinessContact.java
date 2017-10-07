@@ -75,7 +75,7 @@ public class BusinessContact implements Serializable
 	/****************************************************
 	 * Method     : ValidatePhone
 	 *
-	 * Purpose    : The ValidatePhone method TODO:
+	 * Purpose    : The ValidatePhone method
 	 *
 	 * Parameters : array              - an array of integers
 	 *              number_of_elements - the number of elements
